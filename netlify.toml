@@ -1,9 +1,0 @@
-[build]
-  base = "banca"
-  command = "chmod +x node_modules/.bin/react-scripts && npm run build"
-  publish = "build"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
