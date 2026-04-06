@@ -1,0 +1,153 @@
+.catalogo-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0; /* Sem sidebar no catálogo público */
+}
+
+.header-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  z-index: 100;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.admin-access-btn {
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.admin-access-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.products-section {
+  margin-top: 220px;
+  flex: 1;
+  overflow-x: hidden;
+}
+
+/* Loading and Error Messages */
+.loading-message,
+.error-message,
+.no-products-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.loading-message p {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.error-message p {
+  font-size: 16px;
+  color: #ff3b30;
+  margin-bottom: 15px;
+}
+
+.no-products-message p {
+  font-size: 16px;
+  opacity: 0.6;
+  margin-bottom: 15px;
+}
+
+.btn-retry,
+.btn-clear-search {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-retry:hover,
+.btn-clear-search:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* Ensure all content stays within bounds */
+.main-content > * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Force consistent layout */
+.catalogo-categorizado,
+.container {
+  position: relative;
+  left: 0;
+  right: 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .header-section {
+    left: 0 !important;
+    padding: 0 15px;
+  }
+  
+  .header-top {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .admin-access-btn {
+    align-self: flex-start;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .products-section {
+    margin-top: 250px;
+  }
+  
+  /* Garantir que o conteúdo não fique escondido */
+  .catalogo-wrapper {
+    position: relative;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}

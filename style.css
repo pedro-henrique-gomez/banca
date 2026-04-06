@@ -1,0 +1,181 @@
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#111;
+  color:white;
+}
+
+/* ================= HEADER ================= */
+header{
+  padding:15px;
+  text-align:center;
+}
+
+header img{
+  width:100%;
+  max-width:200px;
+}
+
+#busca{
+  padding:10px;
+  width:80%;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+
+/* ================= CATEGORIAS ================= */
+.categorias{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:10px;
+}
+
+.categorias button{
+  padding:8px 12px;
+  border:none;
+  background:#333;
+  color:white;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* ================= PRODUTOS ================= */
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+  padding:10px;
+}
+
+.produto{
+  background:#222;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  transition:0.2s;
+}
+
+.produto:hover{
+  transform:scale(1.03);
+}
+
+.produto img{
+  width:80px;
+  height:80px;
+  object-fit:contain;
+}
+
+/* CONTROLE */
+.controle-card{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:5px;
+}
+
+.controle-card button{
+  padding:5px 8px;
+  border:none;
+  background:#333;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* ================= OVERLAY ================= */
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0);
+  backdrop-filter:blur(0px);
+  transition:0.3s ease;
+  z-index:999;
+  visibility:hidden;
+}
+
+.overlay.active{
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(3px);
+  visibility:visible;
+}
+
+/* ================= CARRINHO (DIREITA) ================= */
+.carrinho{
+  position:fixed;
+  top:0;
+  right:0;
+  width:320px;
+  max-width:90%;
+  height:100%;
+  background:#181818;
+  padding:15px;
+  z-index:1000;
+
+  display:flex;
+  flex-direction:column;
+
+  transform:translateX(100%);
+  transition:transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+  box-shadow:-8px 0 25px rgba(0,0,0,0.7);
+}
+
+.carrinho.active{
+  transform:translateX(0);
+  animation:bounceRight 0.4s;
+}
+
+/* ANIMAÇÃO iFood */
+@keyframes bounceRight{
+  0%{ transform:translateX(100%); }
+  60%{ transform:translateX(-6px); }
+  80%{ transform:translateX(3px); }
+  100%{ transform:translateX(0); }
+}
+
+/* ITENS */
+#itens{
+  flex:1;
+  overflow-y:auto;
+  margin-top:10px;
+}
+
+.item{
+  border-bottom:1px solid #333;
+  padding:10px 0;
+}
+
+/* TOTAL */
+.total{
+  margin-top:10px;
+  font-weight:bold;
+  color:#00e676;
+}
+
+/* CHECKOUT */
+.checkout input,
+.checkout select{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+  border:none;
+  border-radius:6px;
+  background:#222;
+  color:white;
+}
+
+.whatsapp{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  background:#25d366;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}

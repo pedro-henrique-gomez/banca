@@ -1,0 +1,33 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: 250px;
+  background: #f8f9fa;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* Esconder sidebar quando não estiver autenticado */
+.admin-content.no-sidebar {
+  margin-left: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 0;
+  }
+  
+  /* Garantir que o conteúdo não fique escondido pelo sidebar em mobile */
+  .admin-layout {
+    position: relative;
+  }
+  
+  .admin-content {
+    width: 100%;
+  }
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banca no Ponto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header id="header">
+
+  <div class="top-bar">
+    <div class="logo-area">
+      <img src="../imagens/logo/logo.png" alt="Logo">
+      <div>
+        <strong>Banca no Ponto</strong>
+        <p class="location">📍 Avenida Ernani do Amaral n° 207</p>
+      </div>
+    </div>
+
+    <div class="cart-icon" onclick="toggle()">
+      🛒 <span id="contador">0</span>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="busca" placeholder="Buscar produtos..." onkeyup="buscar(this.value)">
+  </div>
+
+</header>
+
+<!-- CATEGORIAS -->
+<div class="categorias">
+  <button onclick="filtrar('todos')">Todos</button>
+  <button onclick="filtrar('bebida')">Bebidas</button>
+  <button onclick="filtrar('cigarro')">Cigarros</button>
+  <button onclick="filtrar('carta')">Cartas</button>
+  <button onclick="filtrar('acessorio')">Acessórios</button>
+</div>
+
+<!-- PRODUTOS -->
+<div class="container" id="produtos"></div>
+
+<!-- OVERLAY -->
+<div class="overlay" onclick="toggle()"></div>
+
+<!-- CARRINHO -->
+<div class="carrinho" id="carrinho">
+
+  <div class="carrinho-header">
+    <h2>Seu pedido</h2>
+    <button class="fechar" onclick="toggle()">✖</button>
+  </div>
+
+  <div id="itens"></div>
+
+  <div class="total" id="total"></div>
+
+  <div class="checkout">
+    <input id="nome" placeholder="Seu nome">
+    <input id="endereco" placeholder="Endereço">
+
+    <select id="pagamento">
+      <option>Dinheiro</option>
+      <option>Pix</option>
+      <option>Cartão</option>
+    </select>
+
+    <button class="whatsapp" onclick="enviar()">Finalizar Pedido</button>
+  </div>
+
+</div>
+
+<script>
+
+/* ================== CONFIG ================== */
+const WHATSAPP = "5521996909806";
+
+/* ================== PRODUTOS ================== */
+const produtos = [
+{nome:"Marlboro Red", preco:12, categoria:"cigarro", img:"../imagens/cigarros/Marlboro Vermelho.png"},
+{nome:"Marlboro Gold", preco:12, categoria:"cigarro", img:"../imagens/cigarros/Marlboro gold.png"},
+{nome:"Dunhill Azul", preco:12, categoria:"cigarro", img:"../imagens/cigarros/dunhill azul.png"},
+{nome:"Dunhill Carlton", preco:12, categoria:"cigarro", img:"../imagens/cigarros/dunhill carlton.png"},
+{nome:"Dunhill Double Refresh", preco:12, categoria:"cigarro", img:"../imagens/cigarros/dunhill double refresh.png"},
+{nome:"Dunhill Mix Refresh", preco:12, categoria:"cigarro", img:"../imagens/cigarros/dunhill mix refresh.png"},
+{nome:"Gudang Garam", preco:15, categoria:"cigarro", img:"../imagens/cigarros/gudang garam.png"},
+{nome:"Kent Derby Azul", preco:12, categoria:"cigarro", img:"../imagens/cigarros/kent derby azul.png"},
+{nome:"Kent Derby Silver", preco:12, categoria:"cigarro", img:"../imagens/cigarros/kent derby silver.png"},
+{nome:"Lucky Strike Azul", preco:12, categoria:"cigarro", img:"../imagens/cigarros/lucky azul.png"},
+{nome:"Lucky Strike Double", preco:12, categoria:"cigarro", img:"../imagens/cigarros/lucky double.png"},
+{nome:"Lucky Strike Red", preco:12, categoria:"cigarro", img:"../imagens/cigarros/lucky red.png"},
+{nome:"Marlboro Blue Ice", preco:12, categoria:"cigarro", img:"../imagens/cigarros/marlboro blue ice.png"},
+{nome:"Marlboro Melancia", preco:12, categoria:"cigarro", img:"../imagens/cigarros/marlboro melancia.png"},
+{nome:"Rothmans Prata", preco:12, categoria:"cigarro", img:"../imagens/cigarros/rothmans minister  prata.png"},
+{nome:"Rothmans Purple Boost", preco:12, categoria:"cigarro", img:"../imagens/cigarros/rothmans minister  purple boost.png"},
+{nome:"Rothmans Azul", preco:12, categoria:"cigarro", img:"../imagens/cigarros/rothmans minister azul.png"},
+{nome:"Rothmans Global Azul", preco:12, categoria:"cigarro", img:"../imagens/cigarros/rothmans minister global azul.png"},
+{nome:"Rothmans Global Red", preco:12, categoria:"cigarro", img:"../imagens/cigarros/rothmans minister global red.png"},
+{nome:"Souza Paiol", preco:10, categoria:"cigarro", img:"../imagens/cigarros/souza paiol.png"},
+
+{nome:"Coca-Cola Lata", preco:8, categoria:"bebida", img:"../imagens/bebidas/coca lata comum.png"},
+{nome:"Coca-Cola Zero Lata", preco:8, categoria:"bebida", img:"../imagens/bebidas/coca lata zero.png"},
+{nome:"H2OH 500ml", preco:10, categoria:"bebida", img:"../imagens/bebidas/H2OH! limoneto.png"},
+{nome:"Coca-Cola 1.5L", preco:10, categoria:"bebida", img:"../imagens/bebidas/coca comum 1,5l.png"},
+{nome:"Coca-Cola Zero 1.5L", preco:10, categoria:"bebida", img:"../imagens/bebidas/coca zero 1,5l.png"},
+{nome:"Dell Vale Uva 200ml", preco:10, categoria:"bebida", img:"../imagens/bebidas/dell vale uva.png"},
+{nome:"Gatorade Sabores", preco:10, categoria:"bebida", img:"../imagens/bebidas/gatorade sabores.png"},
+{nome:"Guaravita", preco:10, categoria:"bebida", img:"../imagens/bebidas/guaravita.png"},
+{nome:"Mate Leão 290ml", preco:10, categoria:"bebida", img:"../imagens/bebidas/mate leão.png"},
+
+{nome:"Tabaco Acrema 25g", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/tabaco acrema.png"},
+{nome:"Tabaco Amsterdam", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/tabaco amsterdam.png"},
+{nome:"Tabaco HI Tobacco 25g", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/tabaco hi tobacco.png"},
+{nome:"Tabaco Veio Pimenta 25g", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/tabaco veio pimenta 25g.png"},
+{nome:"Tabaco Veio Pimenta 50g", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/tabaco veio pimenta 50g.png"},
+{nome:"Filtro HI Tobacco Slim", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/filtro hi tobacco slim.png"},
+{nome:"Filtro Papelito Longo", preco:10, categoria:"tabacaria", img:"../imagens/tabacaria/filtro papelito longo.png"},
+
+{nome:"Celulose Aleda", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/celulose aleda.png"},
+{nome:"Piteira Bem Bolado Pop Large", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/piteira bem bolado pop large.png"},
+{nome:"Piteira Bem Bolado Pop 1/4", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/piteira bem bolado pop.png"},
+{nome:"Piteira Bem Bolado Slim", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/piteira bem bolado slim.png"},
+{nome:"Piteira The OG Small", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/piteira the og small.png"},
+{nome:"Piteira The OG XL", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/piteira THE OG XL.png"},
+
+{nome:"Seda Bem Bolado Brown", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bem bolado brown.png"},
+{nome:"Seda Bem Bolado Pop Mini", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bem bolado pop mini.png"},
+{nome:"Seda Bem Bolado Pop Slim", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bem bolado pop slim.png"},
+{nome:"Seda Bros 66 Blue", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bros 66 blue.png"},
+{nome:"Seda Bros Premium Pink", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bros premim pink.png"},
+{nome:"Seda Bros Premium Black", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bros premium black.png"},
+{nome:"Seda Bros Silver", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bros silver.png"},
+{nome:"Seda Bros 66 Brown", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda bross 66 brown.png"},
+{nome:"Seda GTI 35", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda GTI 35.png"},
+{nome:"Seda GTI 50", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda GTI 50.png"},
+{nome:"Seda Smolking Brown", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda smolking brown.png"},
+{nome:"Seda Smolking Master", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda smolking master.png"},
+{nome:"Seda Zomo Alfafa", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo alfafa.png"},
+{nome:"Seda Zomo Classic Monster", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo classic monster.png"},
+{nome:"Seda Zomo Mini Black", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo mini black.png"},
+{nome:"Seda Zomo Natural Slim", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo natural mini.png"},
+{nome:"Seda Zomo Perfect Black", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo perfect black.png"},
+{nome:"Seda Zomo Perfect Hemp", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo perfect hemp.png"},
+{nome:"Seda Zomo Slim", preco:10, categoria:"tabacaria", img:"../imagens/seda e piteira/seda zomo slim.png"},
+
+{nome:"Pokémon Amigos de Jornada", preco:10, categoria:"carta", img:"../imagens/cartinhas e figurinhas/pokemon amigos de jornada.png"},
+{nome:"Pokémon Megaevolução", preco:10, categoria:"carta", img:"../imagens/cartinhas e figurinhas/pokemon megaevolução.png"},
+{nome:"Pokémon Rivais Predestinados", preco:10, categoria:"carta", img:"../imagens/cartinhas e figurinhas/pokemon rivais predestinados.png"},
+
+{nome:"Cabo iPhone", preco:10, categoria:"acessorio", img:"../imagens/acessórios/cabo de carregador iphone.png"},
+{nome:"Cabo USB-C", preco:10, categoria:"acessorio", img:"../imagens/acessórios/cabo de carregador usbc.png"},
+{nome:"Cabo Dados USB-C", preco:10, categoria:"acessorio", img:"../imagens/acessórios/cabo de dados usb c.png"},
+{nome:"Carregador USB-C", preco:10, categoria:"acessorio", img:"../imagens/acessórios/conjunto carregador usbc.png"},
+{nome:"Fone iPhone", preco:10, categoria:"acessorio", img:"../imagens/acessórios/fone de ouvido iphone.png"}
+];
+
+/* ================== ESTADO ================== */
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+let buscaAtual = "";
+let categoriaAtual = "todos";
+
+/* ================== RENDER ================== */
+function render(){
+  const container = document.getElementById("produtos");
+
+  const filtrados = produtos.filter(p =>
+    (categoriaAtual==="todos" || p.categoria===categoriaAtual) &&
+    p.nome.toLowerCase().includes(buscaAtual.toLowerCase())
+  );
+
+  if(filtrados.length === 0){
+    container.innerHTML = "<p>Nenhum produto encontrado</p>";
+    return;
+  }
+
+  container.innerHTML = filtrados.map(p=>{
+    const item = carrinho.find(i=>i.nome===p.nome);
+
+    return `
+    <div class="produto">
+      <img src="${p.img}">
+      <h3>${p.nome}</h3>
+      <p>R$ ${p.preco.toFixed(2)}</p>
+
+      <div class="controle-card">
+        <button onclick="menosCard('${p.nome}')">-</button>
+        <span>${item ? item.qtd : 0}</span>
+        <button onclick="add('${p.nome}',${p.preco})">+</button>
+      </div>
+    </div>
+    `;
+  }).join("");
+
+  atualizar();
+}
+
+/* ================== BUSCA ================== */
+function buscar(valor){
+  buscaAtual = valor;
+  render();
+}
+
+/* ================== FILTRO ================== */
+function filtrar(cat){
+  categoriaAtual = cat;
+
+  /* destaque botão ativo */
+  document.querySelectorAll(".categorias button").forEach(b=>b.classList.remove("ativo"));
+  event.target.classList.add("ativo");
+
+  render();
+}
+
+/* ================== CARRINHO ================== */
+function add(nome,preco){
+  const item = carrinho.find(i=>i.nome===nome);
+  item ? item.qtd++ : carrinho.push({nome,preco,qtd:1});
+  salvar(); render();
+}
+
+function menosCard(nome){
+  const item = carrinho.find(i=>i.nome===nome);
+  if(!item) return;
+
+  item.qtd--;
+  if(item.qtd<=0){
+    carrinho = carrinho.filter(i=>i.nome!==nome);
+  }
+
+  salvar(); render();
+}
+
+function atualizar(){
+  let total=0, qtdTotal=0;
+
+  const itensHTML = carrinho.map((i,index)=>{
+    total += i.preco*i.qtd;
+    qtdTotal += i.qtd;
+
+    return `
+    <div class="item">
+      <strong>${i.nome}</strong>
+      <div class="controls">
+        <button onclick="menos(${index})">-</button>
+        <span>${i.qtd}</span>
+        <button onclick="mais(${index})">+</button>
+      </div>
+    </div>
+    `;
+  }).join("");
+
+  document.getElementById("itens").innerHTML = itensHTML;
+  document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+  document.getElementById("contador").innerText = qtdTotal;
+}
+
+function mais(i){
+  carrinho[i].qtd++;
+  salvar(); render();
+}
+
+function menos(i){
+  carrinho[i].qtd--;
+  if(carrinho[i].qtd<=0) carrinho.splice(i,1);
+  salvar(); render();
+}
+
+/* ================== STORAGE ================== */
+function salvar(){
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+}
+
+/* ================== UI ================== */
+function toggle(){
+  document.getElementById("carrinho").classList.toggle("active");
+  document.querySelector(".overlay").classList.toggle("active");
+}
+
+/* ================== WHATSAPP ================== */
+function enviar(){
+  const nome = document.getElementById("nome").value;
+  const endereco = document.getElementById("endereco").value;
+  const pagamento = document.getElementById("pagamento").value;
+
+  if(!nome || !endereco){
+    alert("Preencha nome e endereço!");
+    return;
+  }
+
+  let msg = "Pedido:%0A";
+
+  carrinho.forEach(i=>{
+    msg += `- ${i.nome} x${i.qtd}%0A`;
+  });
+
+  const total = carrinho.reduce((s,i)=>s+(i.preco*i.qtd),0);
+
+  msg += `%0ATotal: R$${total.toFixed(2)}`;
+  msg += `%0A%0ANome: ${nome}`;
+  msg += `%0AEndereço: ${endereco}`;
+  msg += `%0APagamento: ${pagamento}`;
+
+  window.open(`https://wa.me/${WHATSAPP}?text=${msg}`);
+}
+
+/* ================== INIT ================== */
+render();
+
+</script>
+
+</body>
+</html>
