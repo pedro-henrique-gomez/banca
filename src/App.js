@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
@@ -188,6 +189,7 @@ function App() {
             {/* Página não encontrada */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <Analytics />
         </Router>
       </ThemeProvider>
     </AuthProvider>
